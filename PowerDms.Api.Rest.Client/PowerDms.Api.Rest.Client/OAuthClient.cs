@@ -11,6 +11,11 @@ namespace PowerDms.Api.Rest.Client
     {
         private readonly HttpClient _HttpClient;
 
+        public OAuthClient(HttpClient httpClient)
+        {
+            _HttpClient = httpClient;
+        }
+
         public Task<HttpResponseMessage> GetAccessToken(
             string username,
             string password,

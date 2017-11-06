@@ -9,6 +9,8 @@ namespace PowerDms.Api.Rest.Client
 
         public readonly GroupsClient Groups;
 
+        public readonly OAuthClient OAuth;
+
         public PowerDmsRestApiClient(ApiVersion version) 
             : this(RestApiRoutes.PowerDmsRestApiDomain, version)
         {
@@ -26,6 +28,7 @@ namespace PowerDms.Api.Rest.Client
             };
 
             Groups = new GroupsClient(_HttpClient);
+            OAuth = new OAuthClient(_HttpClient);
         }
     }
 }
