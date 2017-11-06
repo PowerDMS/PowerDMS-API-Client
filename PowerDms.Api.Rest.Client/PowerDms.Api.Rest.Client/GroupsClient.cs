@@ -17,5 +17,12 @@ namespace PowerDms.Api.Rest.Client
         {
             return _HttpClient.GetAsync($"{RestApiRoutes.Groups}/{groupId}");
         }
+
+        public HttpRequestMessage GetGroupRequest(string groupId)
+        {
+            return new HttpRequestMessage(
+                HttpMethod.Get, 
+                $"{RestApiRoutes.Groups}/{groupId}");
+        }
     }
 }
