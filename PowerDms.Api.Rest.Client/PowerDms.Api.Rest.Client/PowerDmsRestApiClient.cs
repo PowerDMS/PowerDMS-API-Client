@@ -11,21 +11,10 @@ namespace PowerDms.Api.Rest.Client
 
         public readonly OAuthClient OAuth;
 
-        public PowerDmsRestApiClient(ApiVersion version) 
-            : this(RestApiRoutes.PowerDmsRestApiDomain, version)
-        {
-        }
-
         public PowerDmsRestApiClient(
-            string powerDmsRestApiDomain,
-            ApiVersion version)
+            HttpClient httpClient)
         {
-            version = version ?? ApiVersion.Version1;
-
-            _HttpClient = new HttpClient
-            {
-                BaseAddress = new Uri($"{powerDmsRestApiDomain}/{version}")
-            };
+            _HttpClient = httpClient;
 
             Groups = new GroupsClient(_HttpClient);
             OAuth = new OAuthClient(_HttpClient);
