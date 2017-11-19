@@ -13,25 +13,29 @@ namespace PowerDms.Api.Rest.Client
 
         private readonly HttpClient _HttpClient;
 
+        private readonly IAuthenticationTokenProvider _AuthenticationTokenProvider;
+
         public HttpRequestBuilder(
             HttpRequestMessage httpRequestMessage,
-            HttpClient httpClient)
+            HttpClient httpClient,
+            IAuthenticationTokenProvider authenticationTokenProvider = null)
         {
             _HttpRequestMessage = httpRequestMessage;
             _HttpClient = httpClient;
+            _AuthenticationTokenProvider = authenticationTokenProvider;
         }
 
         public async Task<HttpRequestBuilder> AuthenticateWith(
             Credentials credentials)
         {
+            if (_AuthenticationTokenProvider == null)
+            {
+                throw new NoAuthenticationProviderException();
+            }
+
             _HttpRequestMessage
                 .AddAccessToken(
-                    await (await _PowerDmsRestApiClient.OAuth.GetAccessToken(
-                        credentials.Username,
-                        credentials.Password,
-                        credentials.SiteKey,
-                        credentials.ClientSecret
-                    )).GetContent<string>());
+                    await _AuthenticationTokenProvider.GetAccessToken(credentials));
 
             return this;
         }
