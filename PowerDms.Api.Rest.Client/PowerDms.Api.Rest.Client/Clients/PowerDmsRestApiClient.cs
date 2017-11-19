@@ -1,7 +1,6 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 
-namespace PowerDms.Api.Rest.Client
+namespace PowerDms.Api.Rest.Client.Clients
 {
     public class PowerDmsRestApiClient
     {

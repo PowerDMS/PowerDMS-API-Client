@@ -1,8 +1,7 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace PowerDms.Api.Rest.Client
+namespace PowerDms.Api.Rest.Client.Clients
 {
     public class GroupsClient
     {

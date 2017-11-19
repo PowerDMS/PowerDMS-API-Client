@@ -1,6 +1,6 @@
-﻿using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
+using PowerDms.Api.Rest.Client.Clients;
 using PowerDms.Api.Rest.Dto;
 
 namespace PowerDms.Api.Rest.Client

@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PowerDms.Api.Rest.Client
+namespace PowerDms.Api.Rest.Client.Clients
 {
     public class OAuthClient
     {
