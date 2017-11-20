@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard1.5</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PowerDms.Api.Rest.Dto\PowerDms.Api.Rest.Dto.csproj" />
+    <ProjectReference Include="..\..\..\PowerDMS\tests\services\api\PowerDms.Api.Rest.Dtos\PowerDms.Api.Rest.Dtos.csproj" />
   </ItemGroup>
 
 </Project>

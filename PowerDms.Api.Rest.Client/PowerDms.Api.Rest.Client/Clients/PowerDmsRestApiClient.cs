@@ -8,6 +8,8 @@ namespace PowerDms.Api.Rest.Client.Clients
 
         public readonly GroupsClient Groups;
 
+        public readonly UsersClient Users;
+
         public readonly OAuthClient OAuth;
 
         public PowerDmsRestApiClient(
@@ -17,6 +19,7 @@ namespace PowerDms.Api.Rest.Client.Clients
 
             Groups = new GroupsClient(_HttpClient);
             OAuth = new OAuthClient(_HttpClient);
+            Users = new UsersClient(_HttpClient);
         }
     }
 }

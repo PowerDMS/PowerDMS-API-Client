@@ -17,5 +17,12 @@ namespace PowerDms.Api.Rest.Client
                 .AwaitSendAsync()
                 .AwaitGetSuccessfulResponse<T>();
         }
+
+        public static async Task<T> AwaitGetErrorResponse<T>(this Task<HttpRequestBuilder> httpRequestBuilderTask)
+        {
+            return await httpRequestBuilderTask
+                .AwaitSendAsync()
+                .AwaitGetSuccessfulResponse<T>();
+        }
     }
 }

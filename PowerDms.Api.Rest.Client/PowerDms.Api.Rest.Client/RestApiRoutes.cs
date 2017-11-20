@@ -6,6 +6,8 @@
 
         public const string Groups = "/principal/groups";
 
+        public const string Users = "/principal/users";
+
         public const string OAuthAccessToken = "/auth/connect/token";
     }
 }

@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using PowerDms.Api.Rest.Client.Clients;
-using PowerDms.Api.Rest.Dto;
 
 namespace PowerDms.Api.Rest.Client
 {
