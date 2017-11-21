@@ -14,7 +14,7 @@ namespace PowerDms.Api.Rest.Client.Clients
 
         public Task<HttpResponseMessage> GetGroup(string groupId)
         {
-            return _HttpClient.GetAsync($"{RestApiRoutes.Groups}/{groupId}");
+            return _HttpClient.SendAsync(GetGroupRequest(groupId));
         }
 
         public HttpRequestMessage GetGroupRequest(string groupId)
