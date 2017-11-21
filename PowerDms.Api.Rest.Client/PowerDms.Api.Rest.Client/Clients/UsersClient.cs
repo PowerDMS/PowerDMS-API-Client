@@ -1,7 +1,6 @@
 ﻿namespace PowerDms.Api.Rest.Client.Clients
 {
     using System.Net.Http;
-    using Dtos;
 
     public class UsersClient
     {

@@ -20,10 +20,5 @@ namespace PowerDms.Api.Rest.Client
             _AuthenticationTokenProvider = new AuthenticationTokenProvider(
                 PowerDmsRestApiClient.OAuth);
         }
-
-        public HttpRequestBuilder CreateHttpRequestBuilder(HttpRequestMessage httpRequestMessage)
-        {
-            return new HttpRequestBuilder(httpRequestMessage, _HttpClient, _AuthenticationTokenProvider);
-        }
     }
 }

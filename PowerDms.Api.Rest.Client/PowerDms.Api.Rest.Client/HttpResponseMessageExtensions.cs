@@ -11,29 +11,30 @@ namespace PowerDms.Api.Rest.Client
         public static async Task<T> GetContent<T>(this HttpResponseMessage httpResponseMessage)
         {
             var content = await httpResponseMessage.Content.ReadAsStringAsync();
+            JsonConvert.DeserializeObject("");
             return JsonConvert.DeserializeObject<T>(content);
         }
 
-        public static async Task<T> AwaitGetSuccessfulResponse<T>(this Task<HttpResponseMessage> httpResponseMessageTask)
+        public static async Task<TResponse> AwaitGetSuccessfulResponse<TResponse>(this Task<HttpResponseMessage> httpResponseMessageTask)
         {
             return await (await httpResponseMessageTask)
-                .GetSuccessfulResponse<T>();
+                .GetSuccessfulResponse<TResponse>();
         }
 
-        public static async Task<T> AwaitGetErrorRespones<T>(this Task<HttpResponseMessage> httpResponseMessageTask)
+        public static async Task<TError> AwaitGetErrorResponse<TError>(this Task<HttpResponseMessage> httpResponseMessageTask)
         {
             return await (await httpResponseMessageTask)
-                .GetErrorResponse<T>();
+                .GetErrorResponse<TError>();
         }
 
-        public static async Task<T> GetSuccessfulResponse<T>(this HttpResponseMessage httpResponseMessage)
+        public static async Task<TResponse> GetSuccessfulResponse<TResponse>(this HttpResponseMessage httpResponseMessage)
         {
             return await httpResponseMessage
                 .EnsureSuccessStatusCode()
-                .GetContent<T>();
+                .GetContent<TResponse>();
         }
 
-        public static async Task<T> GetErrorResponse<T>(this HttpResponseMessage httpResponseMessage)
+        public static async Task<TError> GetErrorResponse<TError>(this HttpResponseMessage httpResponseMessage)
         {
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
@@ -41,7 +42,7 @@ namespace PowerDms.Api.Rest.Client
             }
 
             return await httpResponseMessage
-                .GetContent<T>();
+                .GetContent<TError>();
         }
     }
 }

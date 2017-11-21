@@ -24,9 +24,9 @@ namespace PowerDms.Api.Rest.Client.Clients
                 $"{RestApiRoutes.Groups}/{groupId}");
         }
 
-        public HttpRequestBuilder GetGroupRequestBuilder(string groupId)
+        public HttpRequestBuilder<GroupDto> GetGroupRequestBuilder(string groupId)
         {
-            return new HttpRequestBuilder(
+            return new HttpRequestBuilder<GroupDto>(
                 GetGroupRequest(groupId),
                 _HttpClient);
         }

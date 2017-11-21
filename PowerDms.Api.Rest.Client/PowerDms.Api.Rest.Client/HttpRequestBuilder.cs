@@ -4,7 +4,9 @@ using PowerDms.Api.Rest.Client.Clients;
 
 namespace PowerDms.Api.Rest.Client
 {
-    public class HttpRequestBuilder
+    using System;
+
+    public class HttpRequestBuilder<TResponse>
     {
         private readonly PowerDmsRestApiClient _PowerDmsRestApiClient;
 
@@ -24,7 +26,7 @@ namespace PowerDms.Api.Rest.Client
             _AuthenticationTokenProvider = authenticationTokenProvider;
         }
 
-        public async Task<HttpRequestBuilder> AuthenticateWith(
+        public async Task<HttpRequestBuilder<TResponse>> AuthenticateWith(
             Credentials credentials)
         {
             if (_AuthenticationTokenProvider == null)
