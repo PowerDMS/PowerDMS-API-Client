@@ -1,4 +1,4 @@
-﻿namespace PowerDms.Api.Rest.Client
+﻿namespace PowerDms.Api.Rest.Dto
 {
     public class GroupDto
     {

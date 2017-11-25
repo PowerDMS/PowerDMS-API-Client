@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using PowerDms.Api.Rest.Dto;
 
 namespace PowerDms.Api.Rest.Client
 {

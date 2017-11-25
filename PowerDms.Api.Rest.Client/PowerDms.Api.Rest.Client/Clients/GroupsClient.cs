@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using PowerDms.Api.Rest.Dto;
 
 namespace PowerDms.Api.Rest.Client.Clients
 {
@@ -27,8 +28,7 @@ namespace PowerDms.Api.Rest.Client.Clients
         public HttpRequestBuilder<GroupDto> GetGroupRequestBuilder(string groupId)
         {
             return new HttpRequestBuilder<GroupDto>(
-                GetGroupRequest(groupId),
-                _HttpClient);
+                GetGroupRequest(groupId));
         }
     }
 }

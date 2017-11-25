@@ -1,49 +1,26 @@
 ﻿using System.Net.Http;
-using System.Threading.Tasks;
-using PowerDms.Api.Rest.Client.Clients;
 
 namespace PowerDms.Api.Rest.Client
 {
-    using System;
+    using PowerDms.Api.Rest.Dto;
 
     public class HttpRequestBuilder<TResponse>
     {
-        private readonly PowerDmsRestApiClient _PowerDmsRestApiClient;
+        public HttpRequestMessage HttpRequestMessage;
 
-        private HttpRequestMessage _HttpRequestMessage;
-
-        private readonly HttpClient _HttpClient;
-
-        private readonly IAuthenticationTokenProvider _AuthenticationTokenProvider;
+        public Credentials Credentials;
 
         public HttpRequestBuilder(
-            HttpRequestMessage httpRequestMessage,
-            HttpClient httpClient,
-            IAuthenticationTokenProvider authenticationTokenProvider = null)
+            HttpRequestMessage httpRequestMessage)
         {
-            _HttpRequestMessage = httpRequestMessage;
-            _HttpClient = httpClient;
-            _AuthenticationTokenProvider = authenticationTokenProvider;
+            HttpRequestMessage = httpRequestMessage;
         }
 
-        public async Task<HttpRequestBuilder<TResponse>> AuthenticateWith(
+        public HttpRequestBuilder<TResponse> AuthenticateWith(
             Credentials credentials)
         {
-            if (_AuthenticationTokenProvider == null)
-            {
-                throw new NoAuthenticationProviderException();
-            }
-
-            _HttpRequestMessage
-                .AddAccessToken(
-                    await _AuthenticationTokenProvider.GetAccessToken(credentials));
-
+            Credentials = credentials;
             return this;
-        }
-
-        public Task<HttpResponseMessage> SendAsync()
-        {
-            return _HttpClient.SendAsync(_HttpRequestMessage);
         }
     }
 }
