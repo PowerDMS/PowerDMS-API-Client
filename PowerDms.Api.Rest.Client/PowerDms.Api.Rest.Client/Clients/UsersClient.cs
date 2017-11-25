@@ -11,11 +11,11 @@
             _HttpClient = httpClient;
         }
 
-        public HttpRequestMessage PostUserRequest(UserDetailsDto userDetailsDto)
-        {
-            return new HttpRequestMessage(
-                HttpMethod.Post,
-                RestApiRoutes.Users);
-        }
+        //public HttpRequestMessage PostUserRequest(UserDetailsDto userDetailsDto)
+        //{
+        //    return new HttpRequestMessage(
+        //        HttpMethod.Post,
+        //        RestApiRoutes.Users);
+        //}
     }
 }

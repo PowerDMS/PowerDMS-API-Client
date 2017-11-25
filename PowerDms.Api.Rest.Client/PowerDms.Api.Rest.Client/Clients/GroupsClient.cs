@@ -1,9 +1,10 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using PowerDms.Api.Rest.Dto;
 
 namespace PowerDms.Api.Rest.Client.Clients
 {
+    using Dto;
+
     public class GroupsClient
     {
         private readonly HttpClient _HttpClient;
@@ -29,6 +30,18 @@ namespace PowerDms.Api.Rest.Client.Clients
         {
             return new HttpRequestBuilder<GroupDto>(
                 GetGroupRequest(groupId));
+        }
+
+        public HttpRequestMessage PostGroupRequest(GroupDto groupDto)
+        {
+            return new HttpRequestMessage(
+                HttpMethod.Post,
+                RestApiRoutes.Groups);
+        }
+        public HttpRequestBuilder<GroupDto> PostGroupRequestBuilder(GroupDto groupDto)
+        {
+            return new HttpRequestBuilder<GroupDto>(
+                PostGroupRequest(groupDto));
         }
     }
 }
