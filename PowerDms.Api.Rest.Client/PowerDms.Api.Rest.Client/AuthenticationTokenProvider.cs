@@ -24,12 +24,16 @@ namespace PowerDms.Api.Rest.Client
                 return _CachedCredentials[credentials];
             }
 
-            return await (await _OAuthClient.GetAccessToken(
+            var response = await _OAuthClient.GetAccessToken(
                 credentials.Username,
                 credentials.Password,
                 credentials.SiteKey,
                 credentials.ClientSecret
-            )).GetContent<string>();
+            );
+
+            var authorization = await response.GetContent<OAuthAuthorizationDto>();
+
+            return authorization.access_token;
         }
     }
 }

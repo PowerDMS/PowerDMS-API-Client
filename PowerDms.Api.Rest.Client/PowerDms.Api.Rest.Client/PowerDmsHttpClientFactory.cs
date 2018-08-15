@@ -23,7 +23,7 @@ namespace PowerDms.Api.Rest.Client
 
             var httpClient = new HttpClient
             {
-                BaseAddress = new Uri($"{powerDmsRestApiDomain}/{apiVersion}")
+                BaseAddress = new Uri($"https://{powerDmsRestApiDomain}/{apiVersion}/")
             };
 
             return httpClient;

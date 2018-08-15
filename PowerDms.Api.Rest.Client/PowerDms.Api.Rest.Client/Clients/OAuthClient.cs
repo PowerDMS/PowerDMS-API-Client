@@ -22,10 +22,9 @@ namespace PowerDms.Api.Rest.Client.Clients
             string siteKey,
             string oauthClientSecret)
         {
-            var httpRequestMessage = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post
-            };
+            var httpRequestMessage = new HttpRequestMessage(
+                HttpMethod.Post,
+                RestApiRoutes.OAuthAccessToken);
 
             httpRequestMessage.Headers.Authorization = 
                 new AuthenticationHeaderValue(

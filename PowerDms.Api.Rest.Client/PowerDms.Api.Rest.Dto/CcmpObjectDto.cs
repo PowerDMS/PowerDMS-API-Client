@@ -2,7 +2,6 @@
 {
     using System;
 
-    [Serializable]
     public class CcmpObjectDto : IEquatable<CcmpObjectDto>
     {
         public string Id { get; set; }

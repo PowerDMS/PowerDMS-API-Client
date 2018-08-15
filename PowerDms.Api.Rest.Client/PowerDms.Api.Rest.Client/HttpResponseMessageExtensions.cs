@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using PowerDms.Api.Rest.Dto;
 
 namespace PowerDms.Api.Rest.Client
 {
@@ -11,8 +12,9 @@ namespace PowerDms.Api.Rest.Client
         public static async Task<T> GetContent<T>(this HttpResponseMessage httpResponseMessage)
         {
             var content = await httpResponseMessage.Content.ReadAsStringAsync();
-            JsonConvert.DeserializeObject("");
-            return JsonConvert.DeserializeObject<T>(content);
+
+            var result = JsonConvert.DeserializeObject<T>(content);
+            return result;
         }
 
         public static async Task<TResponse> AwaitGetSuccessfulResponse<TResponse>(this Task<HttpResponseMessage> httpResponseMessageTask)
@@ -29,9 +31,11 @@ namespace PowerDms.Api.Rest.Client
 
         public static async Task<TResponse> GetSuccessfulResponse<TResponse>(this HttpResponseMessage httpResponseMessage)
         {
-            return await httpResponseMessage
+            var t = await httpResponseMessage
                 .EnsureSuccessStatusCode()
-                .GetContent<TResponse>();
+                .GetContent<ServiceResponseDto<TResponse>>();
+
+            return t.Data;
         }
 
         public static async Task<TError> GetErrorResponse<TError>(this HttpResponseMessage httpResponseMessage)
