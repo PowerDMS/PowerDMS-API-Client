@@ -17,11 +17,15 @@ namespace PowerDms.Api.Rest.Client
             _CachedCredentials = new Dictionary<Credentials, string>();
         }
 
-        public async Task<string> GetAccessToken(Credentials credentials)
+        public async Task<HttpAuthorization> GetAccessToken(Credentials credentials)
         {
             if (_CachedCredentials.ContainsKey(credentials))
             {
-                return _CachedCredentials[credentials];
+                return new HttpAuthorization
+                {
+                    Type = "Bearer",
+                    Credentials = _CachedCredentials[credentials]
+                };
             }
 
             var response = await _OAuthClient.GetAccessToken(
@@ -33,7 +37,11 @@ namespace PowerDms.Api.Rest.Client
 
             var authorization = await response.GetContent<OAuthAuthorizationDto>();
 
-            return authorization.access_token;
+            return new HttpAuthorization
+            {
+                Type = "Bearer",
+                Credentials = authorization.access_token
+            };
         }
     }
 }

@@ -21,6 +21,13 @@ namespace PowerDms.Api.Rest.Client
                 PowerDmsRestApiClient.OAuth);
         }
 
+        public HttpRequestManager(HttpClient httpClient, IAuthenticationTokenProvider authenticationTokenProvider)
+        {
+            _HttpClient = httpClient;
+            PowerDmsRestApiClient = new PowerDmsRestApiClient(httpClient);
+            _AuthenticationTokenProvider = authenticationTokenProvider;
+        }
+
         public async Task<HttpResponseMessage> SendAsync<T>(HttpRequestBuilder<T> httpRequestBuilder)
         {
             await AddAuthentication(httpRequestBuilder);

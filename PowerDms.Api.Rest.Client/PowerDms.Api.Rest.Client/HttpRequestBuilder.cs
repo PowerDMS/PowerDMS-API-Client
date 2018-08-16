@@ -1,9 +1,10 @@
 ﻿using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json;
+using PowerDms.Api.Rest.Dto;
 
 namespace PowerDms.Api.Rest.Client
 {
-    using PowerDms.Api.Rest.Dto;
-
     public class HttpRequestBuilder<TResponse>
     {
         public HttpRequestMessage HttpRequestMessage;
@@ -20,6 +21,13 @@ namespace PowerDms.Api.Rest.Client
             Credentials credentials)
         {
             Credentials = credentials;
+            return this;
+        }
+
+        public HttpRequestBuilder<TResponse> AddJsonBody(object body)
+        {
+            var json = JsonConvert.SerializeObject(body);
+            HttpRequestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
             return this;
         }
     }

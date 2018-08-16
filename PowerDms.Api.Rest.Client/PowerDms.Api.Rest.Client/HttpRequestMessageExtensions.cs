@@ -7,10 +7,10 @@ namespace PowerDms.Api.Rest.Client
     {
         public static HttpRequestMessage AddAccessToken(
             this HttpRequestMessage httpRequestMessage,
-            string oauthAccesstoken)
+            HttpAuthorization httpAuthorization)
         {
             httpRequestMessage.Headers.Authorization = 
-                new AuthenticationHeaderValue("Bearer", oauthAccesstoken);
+                new AuthenticationHeaderValue(httpAuthorization.Type, httpAuthorization.Credentials);
 
             return httpRequestMessage;
         }
