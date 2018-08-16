@@ -43,16 +43,19 @@ namespace DemoConsoleApp
             var httpClient = PowerDmsHttpClientFactory.CreateHttpClient(configuration["Host"], ApiVersion.Version1);
             var requestManager = new HttpRequestManager(httpClient);
 
-            Console.WriteLine("Get Group");
+            Console.WriteLine("Create Group - please delete from Site");
 
-            var group = await GetGroup(requestManager, credentials, "1717316");
+            var newGroup = new GroupDto
+            {
+                Name = "ApiCreated" + Guid.NewGuid()
+            };
 
-            Console.WriteLine($"  Name: {group.Name}");
+            var createdGroup = await NewGroup(requestManager, credentials, newGroup);
 
-            group.Name += "+";
-            var newGroup = await NewGroup(requestManager, credentials, group);
+            Console.WriteLine($"  ID: {createdGroup.Id}");
+            Console.WriteLine($"  Name: {createdGroup.Name}");
 
-            Console.WriteLine($"  Name: {newGroup.Name}");
+            var getItAgain = await GetGroup(requestManager, credentials, createdGroup.Id);
 
             Console.WriteLine("-- press any key to exit --");
             Console.ReadKey();

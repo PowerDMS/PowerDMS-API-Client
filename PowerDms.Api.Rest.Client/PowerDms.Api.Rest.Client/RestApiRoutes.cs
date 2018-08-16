@@ -2,7 +2,7 @@
 {
     public class RestApiRoutes
     {
-        public const string PowerDmsRestApiDomain = "api.powerdms.com";
+        public const string PowerDmsRestApiDomain = "https://api.powerdms.com";
 
         public const string Groups = "principal/groups";
 
