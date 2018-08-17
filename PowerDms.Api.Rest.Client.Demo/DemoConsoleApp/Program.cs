@@ -41,7 +41,7 @@ namespace DemoConsoleApp
                 };
 
             var httpClient = PowerDmsHttpClientFactory.CreateHttpClient(configuration["Host"], ApiVersion.Version1);
-            var requestManager = new HttpRequestManager(httpClient);
+            var requestManager = new HttpRequestManagerFactory().CreateInstance(httpClient);
 
             Console.WriteLine("Create Group - please delete from Site");
 

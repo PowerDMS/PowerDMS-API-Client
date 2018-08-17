@@ -10,7 +10,7 @@ namespace PowerDms.Api.Rest.Client
 
         public readonly PowerDmsRestApiClient PowerDmsRestApiClient;
 
-        private readonly IAuthenticationTokenProvider _AuthenticationTokenProvider;
+        private IAuthenticationTokenProvider _AuthenticationTokenProvider;
 
         public HttpRequestManager(
             HttpClient httpClient)
@@ -26,6 +26,13 @@ namespace PowerDms.Api.Rest.Client
             _HttpClient = httpClient;
             PowerDmsRestApiClient = new PowerDmsRestApiClient(httpClient);
             _AuthenticationTokenProvider = authenticationTokenProvider;
+        }
+
+        public HttpRequestManager ReplaceAuthenticationTokenProvider(
+            IAuthenticationTokenProvider authenticationTokenProvider)
+        {
+            _AuthenticationTokenProvider = authenticationTokenProvider;
+            return this;
         }
 
         public async Task<HttpResponseMessage> SendAsync<T>(HttpRequestBuilder<T> httpRequestBuilder)
