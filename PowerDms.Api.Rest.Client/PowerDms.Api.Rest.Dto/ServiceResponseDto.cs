@@ -4,6 +4,6 @@
     {
         public T Data { get; set; }
 
-        public string Error { get; set; }
+        public ErrorDto Error { get; set; }
     }
 }

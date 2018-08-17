@@ -9,7 +9,7 @@ namespace PowerDms.Api.Rest.Client
         /// </summary>
         /// <param name="httpClient"></param>
         /// <returns></returns>
-        public HttpRequestManager CreateInstance(HttpClient httpClient)
+        public virtual HttpRequestManager CreateInstance(HttpClient httpClient)
         {
             return new HttpRequestManager(httpClient);
         }

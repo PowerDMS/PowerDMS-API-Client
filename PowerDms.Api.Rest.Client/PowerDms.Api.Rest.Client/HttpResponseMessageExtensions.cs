@@ -23,7 +23,7 @@ namespace PowerDms.Api.Rest.Client
                 .GetSuccessfulResponse<TResponse>();
         }
 
-        public static async Task<TError> AwaitGetErrorResponse<TError>(this Task<HttpResponseMessage> httpResponseMessageTask)
+        public static async Task<ErrorDto> AwaitGetErrorResponse<TError>(this Task<HttpResponseMessage> httpResponseMessageTask)
         {
             return await (await httpResponseMessageTask)
                 .GetErrorResponse<TError>();
@@ -38,15 +38,17 @@ namespace PowerDms.Api.Rest.Client
             return t.Data;
         }
 
-        public static async Task<TError> GetErrorResponse<TError>(this HttpResponseMessage httpResponseMessage)
+        public static async Task<ErrorDto> GetErrorResponse<TError>(this HttpResponseMessage httpResponseMessage)
         {
-            if (!httpResponseMessage.IsSuccessStatusCode)
+            if (httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new Exception();
             }
 
-            return await httpResponseMessage
-                .GetContent<TError>();
+            var response = await httpResponseMessage
+                .GetContent<ServiceResponseDto<TError>>();
+
+            return response.Error;
         }
     }
 }

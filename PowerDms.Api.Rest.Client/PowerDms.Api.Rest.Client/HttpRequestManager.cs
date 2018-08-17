@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using PowerDms.Api.Rest.Client.Clients;
+using PowerDms.Api.Rest.Dto;
 
 namespace PowerDms.Api.Rest.Client
 {
@@ -28,15 +29,16 @@ namespace PowerDms.Api.Rest.Client
             _AuthenticationTokenProvider = authenticationTokenProvider;
         }
 
-        public HttpRequestManager ReplaceAuthenticationTokenProvider(
+        public virtual HttpRequestManager ReplaceAuthenticationTokenProvider(
             IAuthenticationTokenProvider authenticationTokenProvider)
         {
             _AuthenticationTokenProvider = authenticationTokenProvider;
             return this;
         }
 
-        public async Task<HttpResponseMessage> SendAsync<T>(HttpRequestBuilder<T> httpRequestBuilder)
+        public virtual async Task<HttpResponseMessage> SendAsync<T>(HttpRequestBuilder<T> httpRequestBuilder)
         {
+            // virtual to facilitate faking during unit testing
             await AddAuthentication(httpRequestBuilder);
             return await _HttpClient.SendAsync(httpRequestBuilder.HttpRequestMessage);
         }
@@ -62,7 +64,7 @@ namespace PowerDms.Api.Rest.Client
                 .AwaitGetSuccessfulResponse<TResponse>();
         }
 
-        public async Task<TError> GetErrorResponse<TResponse, TError>(
+        public async Task<ErrorDto> GetErrorResponse<TResponse, TError>(
             HttpRequestBuilder<TResponse> httpRequestBuilder)
         {
             return await SendAsync(httpRequestBuilder)

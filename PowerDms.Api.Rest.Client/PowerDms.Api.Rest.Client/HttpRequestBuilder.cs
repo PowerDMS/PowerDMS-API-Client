@@ -10,6 +10,8 @@ namespace PowerDms.Api.Rest.Client
         public HttpRequestMessage HttpRequestMessage;
 
         public Credentials Credentials;
+        
+        public object Body { get; private set; }
 
         public HttpRequestBuilder(
             HttpRequestMessage httpRequestMessage)
@@ -26,6 +28,7 @@ namespace PowerDms.Api.Rest.Client
 
         public HttpRequestBuilder<TResponse> AddJsonBody(object body)
         {
+            Body = body;
             var json = JsonConvert.SerializeObject(body);
             HttpRequestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
             return this;

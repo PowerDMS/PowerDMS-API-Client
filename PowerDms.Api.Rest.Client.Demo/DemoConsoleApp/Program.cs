@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using PowerDms.Api.Rest.Client;
@@ -57,6 +58,8 @@ namespace DemoConsoleApp
 
             var getItAgain = await GetGroup(requestManager, credentials, createdGroup.Id);
 
+            var getBogusOne = await GetGroup(requestManager, credentials, "0");
+
             Console.WriteLine("-- press any key to exit --");
             Console.ReadKey();
         }
@@ -68,8 +71,17 @@ namespace DemoConsoleApp
                 .GetGroupRequestBuilder(groupId)
                 .AuthenticateWith(credentials);
 
-            return await requestManager.SendAsync(requestBuilder)
-                .AwaitGetSuccessfulResponse<GroupDto>();
+            var result = await requestManager.SendAsync(requestBuilder);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                // CR note: why would I need to pass a <T> for errors?
+                var error = await result.GetErrorResponse<GroupDto>();
+                Console.WriteLine($"-- Error! Code: {error.Code}, Message: {error.Messages.FirstOrDefault()} --");
+                return null;
+            }
+
+            return await result.GetSuccessfulResponse<GroupDto>();
         }
 
         private static async Task<GroupDto> NewGroup(HttpRequestManager requestManager, Credentials credentials, GroupDto groupDto)

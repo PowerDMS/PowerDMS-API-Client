@@ -37,6 +37,9 @@ namespace PowerDms.Api.Rest.Client
 
             var authorization = await response.GetContent<OAuthAuthorizationDto>();
 
+            // CR note: missing storing to cache
+            // but I don't know, I'll rather token be stored in the Manager
+
             return new HttpAuthorization
             {
                 Type = "Bearer",
