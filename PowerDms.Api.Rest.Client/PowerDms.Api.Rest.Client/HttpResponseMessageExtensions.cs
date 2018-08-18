@@ -48,6 +48,14 @@ namespace PowerDms.Api.Rest.Client
             var response = await httpResponseMessage
                 .GetContent<ServiceResponseDto<TError>>();
 
+            if (response == null)
+            {
+                return new ErrorDto
+                {
+                    Code = httpResponseMessage.StatusCode.ToString(),
+                    HttpStatusCode = (int)httpResponseMessage.StatusCode
+                };
+            }
             return response.Error;
         }
     }

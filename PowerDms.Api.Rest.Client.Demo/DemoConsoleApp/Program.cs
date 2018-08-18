@@ -77,7 +77,7 @@ namespace DemoConsoleApp
             {
                 // CR note: why would I need to pass a <T> for errors?
                 var error = await result.GetErrorResponse<GroupDto>();
-                Console.WriteLine($"-- Error! Code: {error.Code}, Message: {error.Messages.FirstOrDefault()} --");
+                Console.WriteLine($"-- Error! Code: {error.Code}, Message: {error.Messages?.FirstOrDefault()} --");
                 return null;
             }
 
@@ -90,8 +90,18 @@ namespace DemoConsoleApp
                 .PostGroupRequestBuilder(groupDto)
                 .AuthenticateWith(credentials);
 
-            return await requestManager.SendAsync(requestBuilder)
-                .AwaitGetSuccessfulResponse<GroupDto>();
+            var result = await requestManager.SendAsync(requestBuilder);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                // CR note: why would I need to pass a <T> for errors?
+                var error = await result.GetErrorResponse<GroupDto>();
+                Console.WriteLine($"-- Error! Code: {error.Code}, Message: {error.Messages?.FirstOrDefault()} --");
+                return null;
+            }
+
+            return await result
+                .GetSuccessfulResponse<GroupDto>();
         }
     }
 }
