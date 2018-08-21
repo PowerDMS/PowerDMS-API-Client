@@ -14,12 +14,12 @@ namespace PowerDms.Api.Rest.Client
         private IAuthenticationTokenProvider _AuthenticationTokenProvider;
 
         public HttpRequestManager(
-            HttpClient httpClient)
+            HttpClient httpClient,
+            AuthenticationTokenProvider authenticationTokenProvider)
         {
             _HttpClient = httpClient;
             PowerDmsRestApiClient = new PowerDmsRestApiClient(httpClient);
-            _AuthenticationTokenProvider = new AuthenticationTokenProvider(
-                PowerDmsRestApiClient.OAuth);
+            _AuthenticationTokenProvider = authenticationTokenProvider;
         }
 
         public HttpRequestManager(HttpClient httpClient, IAuthenticationTokenProvider authenticationTokenProvider)

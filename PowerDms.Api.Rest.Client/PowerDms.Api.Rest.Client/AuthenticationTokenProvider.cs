@@ -9,11 +9,16 @@ namespace PowerDms.Api.Rest.Client
     {
         private readonly OAuthClient _OAuthClient;
 
+        private readonly string _OAuthClientSecret;
+
         private IDictionary<Credentials, string> _CachedCredentials;
 
-        public AuthenticationTokenProvider(OAuthClient oAuthClient)
+        public AuthenticationTokenProvider(
+            OAuthClient oAuthClient,
+            string oAuthClientSecret)
         {
             _OAuthClient = oAuthClient;
+            _OAuthClientSecret = oAuthClientSecret;
             _CachedCredentials = new Dictionary<Credentials, string>();
         }
 
