@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PowerDms.Api.Rest.Dto;
@@ -45,18 +46,32 @@ namespace PowerDms.Api.Rest.Client
                 throw new Exception();
             }
 
-            var response = await httpResponseMessage
-                .GetContent<ServiceResponseDto<TError>>();
-
-            if (response == null)
+            if (httpResponseMessage.Content.Headers.ContentType.MediaType == "application/json")
             {
+                var response = await httpResponseMessage
+                    .GetContent<ServiceResponseDto<TError>>();
+
+                if (response == null)
+                {
+                    return new ErrorDto
+                    {
+                        Code = httpResponseMessage.StatusCode.ToString(),
+                        HttpStatusCode = (int)httpResponseMessage.StatusCode
+                    };
+                }
+                return response.Error;
+            }
+            else
+            {
+                var response = await httpResponseMessage.Content.ReadAsStringAsync();
+
                 return new ErrorDto
                 {
                     Code = httpResponseMessage.StatusCode.ToString(),
-                    HttpStatusCode = (int)httpResponseMessage.StatusCode
+                    HttpStatusCode = (int)httpResponseMessage.StatusCode,
+                    Messages = response != null ? new []{response} : null
                 };
             }
-            return response.Error;
         }
     }
 }
