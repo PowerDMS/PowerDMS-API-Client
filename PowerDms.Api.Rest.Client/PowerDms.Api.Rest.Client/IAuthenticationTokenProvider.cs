@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using PowerDms.Api.Rest.Dto;
+﻿using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace PowerDms.Api.Rest.Client
 {
     public interface IAuthenticationTokenProvider
     {
-        Task<HttpAuthorization> GetAccessToken(Credentials credentials);
+        Task<AuthenticationHeaderValue> GetAccessToken();
     }
 }

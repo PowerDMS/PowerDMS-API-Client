@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using PowerDms.Api.Rest.Client.Clients;
 using PowerDms.Api.Rest.Dto;
@@ -7,49 +7,35 @@ namespace PowerDms.Api.Rest.Client
 {
     public class AuthenticationTokenProvider : IAuthenticationTokenProvider
     {
-        private readonly OAuthClient _OAuthClient;
+        // TODO: must implement token refreshing at some point
 
-        private readonly string _OAuthClientSecret;
+        private readonly OAuthClient _oAuthClient;
 
-        private IDictionary<Credentials, string> _CachedCredentials;
+        private readonly Credentials _credentials;
 
-        public AuthenticationTokenProvider(
-            OAuthClient oAuthClient,
-            string oAuthClientSecret)
+        private OAuthAuthorizationDto _authAuthorization;
+
+        public AuthenticationTokenProvider(OAuthClient oAuthClient, Credentials credentials)
         {
-            _OAuthClient = oAuthClient;
-            _OAuthClientSecret = oAuthClientSecret;
-            _CachedCredentials = new Dictionary<Credentials, string>();
+            _oAuthClient = oAuthClient;
+            _credentials = credentials;
         }
 
-        public async Task<HttpAuthorization> GetAccessToken(Credentials credentials)
+        public async Task<AuthenticationHeaderValue> GetAccessToken()
         {
-            if (_CachedCredentials.ContainsKey(credentials))
+            if (_authAuthorization?.access_token == null)
             {
-                return new HttpAuthorization
-                {
-                    Type = "Bearer",
-                    Credentials = _CachedCredentials[credentials]
-                };
+                var response = await _oAuthClient.GetAccessToken(
+                    _credentials.Username,
+                    _credentials.Password,
+                    _credentials.SiteKey,
+                    _credentials.ClientSecret
+                );
+
+                _authAuthorization = await response.GetContent<OAuthAuthorizationDto>();
             }
 
-            var response = await _OAuthClient.GetAccessToken(
-                credentials.Username,
-                credentials.Password,
-                credentials.SiteKey,
-                credentials.ClientSecret
-            );
-
-            var authorization = await response.GetContent<OAuthAuthorizationDto>();
-
-            // CR note: missing storing to cache
-            // but I don't know, I'll rather token be stored in the Manager
-
-            return new HttpAuthorization
-            {
-                Type = "Bearer",
-                Credentials = authorization.access_token
-            };
+            return new AuthenticationHeaderValue("Bearer", _authAuthorization.access_token);
         }
     }
 }

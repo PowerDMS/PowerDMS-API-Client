@@ -15,6 +15,11 @@ namespace PowerDms.Api.Rest.Client
             return CreateHttpClient(RestApiRoutes.PowerDmsRestApiDomain, apiVersion);
         }
 
+        public static HttpClient CreateOAuthHttpClient()
+        {
+            return CreateHttpClient(RestApiRoutes.PowerDmsOAuthDomain, null);
+        }
+
         public static HttpClient CreateHttpClient(
             string powerDmsRestApiDomain, 
             ApiVersion apiVersion)

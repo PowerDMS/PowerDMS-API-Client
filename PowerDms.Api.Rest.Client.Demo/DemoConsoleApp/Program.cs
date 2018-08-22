@@ -41,67 +41,65 @@ namespace DemoConsoleApp
                     ClientSecret = configuration["Credentials:ClientSecret"]
                 };
 
-            var httpClient = PowerDmsHttpClientFactory.CreateHttpClient(configuration["Host"], ApiVersion.Version1);
-            var requestManager = new HttpRequestManagerFactory().CreateInstance(httpClient);
-
-            Console.WriteLine("Create Group - please delete from Site");
+            var requestManager =
+                new HttpRequestManagerBuilder()
+                    .SetApiHost(configuration["Host"])      // only needed if not using public PowerDMS API
+                    .SetOAuthHost(configuration["Host"])    // only needed if not using public PowerDMS API
+                    .Build(credentials);
 
             var newGroup = new GroupDto
             {
                 Name = "ApiCreated" + Guid.NewGuid()
             };
 
-            var createdGroup = await NewGroup(requestManager, credentials, newGroup);
+            var createdGroup = await NewGroup(requestManager, newGroup);
 
             Console.WriteLine($"  ID: {createdGroup.Id}");
             Console.WriteLine($"  Name: {createdGroup.Name}");
 
-            var getItAgain = await GetGroup(requestManager, credentials, createdGroup.Id);
+            var getItAgain = await GetGroup(requestManager, createdGroup.Id);
 
-            var getBogusOne = await GetGroup(requestManager, credentials, "0");
+            var getBogusOne = await GetGroup(requestManager, "0");
 
             Console.WriteLine("-- press any key to exit --");
             Console.ReadKey();
         }
 
-        private static async Task<GroupDto> GetGroup(HttpRequestManager requestManager, Credentials credentials, string groupId)
+        private static async Task<GroupDto> GetGroup(HttpRequestManager requestManager, string groupId)
         {
             // I don't like the fact credentials need to be set on each builder, why not in the manager?
             var requestBuilder = requestManager.PowerDmsRestApiClient.Groups
-                .GetGroupRequestBuilder(groupId)
-                .AuthenticateWith(credentials);
+                .GetGroupRequestBuilder(groupId);
 
-            var result = await requestManager.SendAsync(requestBuilder);
+            var result = await requestManager
+                .SendAsync(requestBuilder)
+                .AwaitGetServiceResponse<GroupDto>();
 
-            if (!result.IsSuccessStatusCode)
+            if (!result.IsSuccessful)
             {
-                // CR note: why would I need to pass a <T> for errors?
-                var error = await result.GetErrorResponse<GroupDto>();
-                Console.WriteLine($"-- Error! Code: {error.Code}, Message: {error.Messages?.FirstOrDefault()} --");
+                Console.WriteLine($"-- Error! Code: {result.Error.Code}, Message: {result.Error.Messages?.FirstOrDefault()} --");
                 return null;
             }
 
-            return await result.GetSuccessfulResponse<GroupDto>();
+            return result.Data;
         }
 
-        private static async Task<GroupDto> NewGroup(HttpRequestManager requestManager, Credentials credentials, GroupDto groupDto)
+        private static async Task<GroupDto> NewGroup(HttpRequestManager requestManager, GroupDto groupDto)
         {
             var requestBuilder = requestManager.PowerDmsRestApiClient.Groups
-                .PostGroupRequestBuilder(groupDto)
-                .AuthenticateWith(credentials);
+                .PostGroupRequestBuilder(groupDto);
 
-            var result = await requestManager.SendAsync(requestBuilder);
+            var result = await requestManager
+                .SendAsync(requestBuilder)
+                .AwaitGetServiceResponse<GroupDto>();
 
-            if (!result.IsSuccessStatusCode)
+            if (!result.IsSuccessful)
             {
-                // CR note: why would I need to pass a <T> for errors?
-                var error = await result.GetErrorResponse<GroupDto>();
-                Console.WriteLine($"-- Error! Code: {error.Code}, Message: {error.Messages?.FirstOrDefault()} --");
+                Console.WriteLine($"-- Error! Code: {result.Error.Code}, Message: {result.Error.Messages?.FirstOrDefault()} --");
                 return null;
             }
 
-            return await result
-                .GetSuccessfulResponse<GroupDto>();
+            return result.Data;
         }
     }
 }

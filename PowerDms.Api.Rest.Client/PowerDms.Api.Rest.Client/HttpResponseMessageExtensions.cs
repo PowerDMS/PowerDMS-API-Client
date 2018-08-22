@@ -1,15 +1,17 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PowerDms.Api.Rest.Dto;
 
 namespace PowerDms.Api.Rest.Client
 {
-    using System;
-
     public static class HttpResponseMessageExtensions
     {
+        // TODO: replace this when .net std 2.1 is out:
+        // https://github.com/dotnet/corefx/issues/26201
+        private static string _applicationJson = "application/json";
+
         public static async Task<T> GetContent<T>(this HttpResponseMessage httpResponseMessage)
         {
             var content = await httpResponseMessage.Content.ReadAsStringAsync();
@@ -46,7 +48,7 @@ namespace PowerDms.Api.Rest.Client
                 throw new Exception();
             }
 
-            if (httpResponseMessage.Content.Headers.ContentType.MediaType == "application/json")
+            if (httpResponseMessage.Content.Headers.ContentType.MediaType == _applicationJson)
             {
                 var response = await httpResponseMessage
                     .GetContent<ServiceResponseDto<TError>>();
@@ -72,6 +74,73 @@ namespace PowerDms.Api.Rest.Client
                     Messages = response != null ? new []{response} : null
                 };
             }
+        }
+
+        public static async Task<ServiceResponseDto<T>> GetServiceResponse<T>(this HttpResponseMessage httpResponseMessage)
+        {
+            if (httpResponseMessage.Content.Headers.ContentType.MediaType == _applicationJson)
+            {
+                return await httpResponseMessage
+                    .GetContent<ServiceResponseDto<T>>();
+            }
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                var response = await httpResponseMessage.Content.ReadAsStringAsync();
+
+                return new ServiceResponseDto<T>
+                {
+                    Error = new ErrorDto
+                    {
+                        Code = httpResponseMessage.StatusCode.ToString(),
+                        HttpStatusCode = (int) httpResponseMessage.StatusCode,
+                        Messages = response != null ? new[] {response} : null
+                    }
+                };
+            }
+
+            return new ServiceResponseDto<T>
+            {
+                Data = default(T)
+            };
+        }
+
+        public static async Task<ServiceResponseDto> GetServiceResponse(this HttpResponseMessage httpResponseMessage)
+        {
+            if (httpResponseMessage.IsSuccessStatusCode)
+            {
+                return new ServiceResponseDto();
+            }
+
+            if (httpResponseMessage.Content.Headers.ContentType.MediaType == _applicationJson)
+            {
+                return await httpResponseMessage
+                    .GetContent<ServiceResponseDto>();
+            }
+
+            var response = await httpResponseMessage.Content.ReadAsStringAsync();
+
+            return new ServiceResponseDto
+            {
+                Error = new ErrorDto
+                {
+                    Code = httpResponseMessage.StatusCode.ToString(),
+                    HttpStatusCode = (int) httpResponseMessage.StatusCode,
+                    Messages = response != null ? new[] {response} : null
+                }
+            };
+        }
+
+        public static async Task<ServiceResponseDto<T>> AwaitGetServiceResponse<T>(
+            this Task<HttpResponseMessage> httpResponseMessageTask)
+        {
+            return await (await httpResponseMessageTask).GetServiceResponse<T>();
+        }
+
+        public static async Task<ServiceResponseDto> AwaitGetServiceResponse(
+            this Task<HttpResponseMessage> httpResponseMessageTask)
+        {
+            return await (await httpResponseMessageTask).GetServiceResponse();
         }
     }
 }
