@@ -1,42 +1,37 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using PowerDms.Api.Rest.Client.Clients;
+using PowerDms.Api.Rest.Dto;
 
 namespace PowerDms.Api.Rest.Client
 {
     public class HttpRequestManager
     {
-        private readonly HttpClient _HttpClient;
+        private readonly HttpClient _httpClient;
 
         public readonly PowerDmsRestApiClient PowerDmsRestApiClient;
 
-        private readonly IAuthenticationTokenProvider _AuthenticationTokenProvider;
+        private readonly IAuthenticationTokenProvider _authenticationTokenProvider;
 
-        public HttpRequestManager(
-            HttpClient httpClient,
-            AuthenticationTokenProvider authenticationTokenProvider)
+        public HttpRequestManager(HttpClient httpClient, IAuthenticationTokenProvider authenticationTokenProvider)
         {
-            _HttpClient = httpClient;
+            _httpClient = httpClient;
             PowerDmsRestApiClient = new PowerDmsRestApiClient(httpClient);
-            _AuthenticationTokenProvider = authenticationTokenProvider;
+            _authenticationTokenProvider = authenticationTokenProvider;
         }
 
-        public async Task<HttpResponseMessage> SendAsync<T>(HttpRequestBuilder<T> httpRequestBuilder)
+        public virtual async Task<HttpResponseMessage> SendAsync<T>(HttpRequestBuilder<T> httpRequestBuilder)
         {
+            // virtual to facilitate faking during unit testing
             await AddAuthentication(httpRequestBuilder);
-            return await _HttpClient.SendAsync(httpRequestBuilder.HttpRequestMessage);
+            return await _httpClient.SendAsync(httpRequestBuilder.HttpRequestMessage);
         }
 
         private async Task<HttpRequestBuilder<T>> AddAuthentication<T>(
             HttpRequestBuilder<T> httpRequestBuilder)
         {
-            if (httpRequestBuilder.Credentials != null)
-            {
-                httpRequestBuilder.HttpRequestMessage
-                    .AddAccessToken(
-                        await _AuthenticationTokenProvider.GetAccessToken(httpRequestBuilder.Credentials));
-
-            }
+            httpRequestBuilder.HttpRequestMessage
+                .AddAccessToken(await _authenticationTokenProvider.GetAccessToken());
 
             return httpRequestBuilder;
         }
@@ -48,7 +43,7 @@ namespace PowerDms.Api.Rest.Client
                 .AwaitGetSuccessfulResponse<TResponse>();
         }
 
-        public async Task<TError> GetErrorResponse<TResponse, TError>(
+        public async Task<ErrorDto> GetErrorResponse<TResponse, TError>(
             HttpRequestBuilder<TResponse> httpRequestBuilder)
         {
             return await SendAsync(httpRequestBuilder)

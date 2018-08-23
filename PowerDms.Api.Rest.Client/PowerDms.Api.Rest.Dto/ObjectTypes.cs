@@ -1,8 +1,5 @@
 ﻿namespace PowerDms.Api.Rest.Dto
 {
-    using System;
-
-    [Serializable]
     public enum ObjectTypes
     {
         Document,

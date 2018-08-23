@@ -7,6 +7,9 @@ namespace PowerDms.Api.Rest.Client.Clients
 
     public class GroupsClient
     {
+        /// <summary>
+        /// I think this is going away, Manager will handle the sending
+        /// </summary>
         private readonly HttpClient _HttpClient;
 
         public GroupsClient(HttpClient httpClient)
@@ -40,8 +43,8 @@ namespace PowerDms.Api.Rest.Client.Clients
         }
         public HttpRequestBuilder<GroupDto> PostGroupRequestBuilder(GroupDto groupDto)
         {
-            return new HttpRequestBuilder<GroupDto>(
-                PostGroupRequest(groupDto));
+            return new HttpRequestBuilder<GroupDto>(PostGroupRequest(groupDto))
+                .AddJsonBody(groupDto);
         }
     }
 }

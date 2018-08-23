@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.5</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>1.0.0-alpha9</Version>
+    <Authors>PowerDMS Inc.</Authors>
+    <Company>PowerDMS Inc.</Company>
+    <PackageProjectUrl>https://github.com/PowerDMS/PowerDMS-API-Client</PackageProjectUrl>
+    <Description>Object definitions for PowerDms.Api.Rest.Client</Description>
+    <AssemblyVersion>1.0.0.9</AssemblyVersion>
+    <FileVersion>1.0.0.9</FileVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Runtime.Serialization.Formatters">
-      <HintPath>..\..\..\..\Users\alex.denton\.nuget\packages\system.runtime.serialization.formatters\4.3.0\ref\netstandard1.3\System.Runtime.Serialization.Formatters.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 
 </Project>
